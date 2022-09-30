@@ -1,14 +1,15 @@
-# Table of Contents  
-- [Table of Contents](#table-of-contents)
-- [QIDI-Klipper](#qidi-klipper)
-  - [BOM](#bom)
-  - [Install ST Link v2 and upgrade](#install-st-link-v2-and-upgrade)
-
-
 # QIDI-Klipper
 Here i collect all my expertise on how to install klipper on our QIDI X-Plus. X-Max.
 
 Starting from the work of Funkton and ecsv (thanks to them) i'm trying to collect every info on this page
+
+# Configuration  
+- [QIDI-Klipper](#qidi-klipper)
+- [Configuration](#configuration)
+  - [BOM](#bom)
+  - [Install ST Link v2 and upgrade](#install-st-link-v2-and-upgrade)
+  - [Dump Current Firmware](#dump-current-firmware)
+  - [Install Klipper](#install-klipper)
 
 ## BOM
 
@@ -41,12 +42,64 @@ Check if a new version of firmware are ready and in case press Upgrade
 
 ![stlink upgrade](images/stlinkupgrade.png)
 
-In below image **Version** and **Update to Firmware** are the same so i don't need to upgrade.
+In below image **Version** and **Update to Firmware** are the same so i don't need to upgrade. After upgrade close window.
 
 let's go to next chapter, Dump current Firmware
 
+## Dump Current Firmware
+
+Open bottom panel of your Qidi printer, remove all screws, take some photos of mainboard connections ( some photos will be uploaded on images/mainboard) and remove mainboard.
+
+I suggest to remove because it's easier to plug dupont cables, flash firmware and test with klipper.
+
+With dupont calbles connect STLink to Main board, folloing this schema:
+
+| STLink | mainboard |
+| :---:   | :---: |
+| 3.3V | 3V|
+| SWCLK | SWCS |
+| GND | GND |
+| SWDIO | SWI
 
 
+Connect STLink to your computer and press __connect__ 
 
+![cubeprog connect](images/cubeprog_connect.png)
 
+___Note___: if you already have klipper installed you need to press reset button and keep it pressed while you click connect and relase after it connected
 
+On ___Address__ insert ___0x08000000___ on ___Size__ insert ___0x80000___ and press read. If everything is ok you'll see a table below the bar full of data, now press the arrow in Read button and click on __Save as ...__ and save your firmware.
+
+Dimensions should be near 524 KB
+
+## Install Klipper
+
+Now you need a raspberry, you can install __imager__ from [here](https://www.raspberrypi.com/software/), once you have installed open imager click on Operative System -> Raspberry Pi OS (other) and select __Raspberry Pi OS Lite (64)__ remember to install the lite version, you don't need UI.
+
+On Imager on Bottom right click on settings (gear icon) click on __Enable SSH__ and leave __use password authentication__. On set Username and password insert an user (please different from pi) and insert a real password (different from raspberry).
+
+Now click on __Configure wirelesss lan__ and insert yout SSID and password.
+
+If you use ethernet cable you can skip last configuration.
+
+Power in your raspberry, look on your router when it connect and copy the IP.
+
+Now if you use windows open putty and configure raspberry ip with user and password, if you use linux distro open terminal and press
+
+__ssh user@ip__ it ask you for password. Now that you are inside your raspberry you can install [__KIAUH__](https://github.com/th33xitus/kiauh). Before installing it update and upgrade your rasp __sudo apt update__ and __sudo apt upgrade__ after that install git __sudo apt install git__ (press Y when it ask you to install)
+now download KIAUH 
+``` 
+cd ~
+git clone https://github.com/th33xitus/kiauh.git
+./kiauh/kiauh.sh
+``` 
+![kiauh1](images/kiauh_1.png)
+
+Press 1 for Install and select Klipper (press 1), when it complete press again 1 for install and install Moonraker (press 2) repeat for fluidd or mainsail (press 4 for fluidd, 3 for Mainsail)
+
+When you press B you will see an image like one posted here.
+Press Q and exit.
+
+Open a new page on your browser and past the ip of your raspberry, if everything it's ok you will see the fluidd or mainsail webpage
+
+Congratulations klipper it's correctly installed (don't worry about the error on mcu we will fix later)
