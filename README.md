@@ -142,3 +142,4 @@ configuration must be like this one
 
 Now press ESC and save
 
+from terminal now write __make__ press enter and wait. When it finish __klipper.bin__ will be on __out__ folder and will be around 24KB
