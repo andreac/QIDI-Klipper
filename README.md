@@ -10,6 +10,7 @@ Starting from the work of Funkton and ecsv (thanks to them) i'm trying to collec
   - [Install ST Link v2 and upgrade](#install-st-link-v2-and-upgrade)
   - [Dump Current Firmware](#dump-current-firmware)
   - [Install Klipper](#install-klipper)
+  - [Compile klipper](#compile-klipper)
 
 ## BOM
 
@@ -103,3 +104,41 @@ Press Q and exit.
 Open a new page on your browser and past the ip of your raspberry, if everything it's ok you will see the fluidd or mainsail webpage
 
 Congratulations klipper it's correctly installed (don't worry about the error on mcu we will fix later)
+
+## Compile klipper
+
+Now we need to compile klipper and install in our main board. follow carefully next steps
+
+open putty/terminal and connect to your raspberry, in home folder you find a __Klipper folder__
+
+```
+cd klipper
+make menuconfig
+``` 
+
+if you see an error like 
+```
+locale.Error: unsupported locale setting
+```
+simply copy this on terminal and press enter
+```
+export LC_ALL=C
+```
+now you see this menù
+
+![klipper_bin_1](images/klipper_bin_1.png)
+
+press space bar to enable extra low level configuration, 
+press space bar on Micro-controller and select __STM32__
+Press space bar on processor model and select __STM32F407__
+Press space bar on bootloader offset and select __No bootloader__
+Press space bar on Communication Interface and select __Serial (on USART1 PA10/PA9)__
+Now on baud rate insert 115200
+and last on on GPIO Pins insert __PE0, !PG10__
+
+configuration must be like this one
+
+![klipper_bin_2](images/klipper_bin_2.png)
+
+Now press ESC and save
+
